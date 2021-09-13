@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/style.css') }}">
+
+</head>
+<body>
+    <div class="container p-3">
+        <div class="row">
+            {% for message in get_flashed_messages(category_filter=["logout"]) %}
+            <p class="alert alert-info">{{message}}</p>
+            {% endfor %}
+            <div class="col left">
+                <h1 class="mb-4">Register</h1>
+                {% for message in get_flashed_messages(category_filter=["success"]) %}
+                <p class="alert alert-success">{{message}}</p>
+                {% endfor %}
+                <form action="/user/register" method="post">
+                    <div class="input-group mb-3">
+                        <input type="text" aria-label="First name" class="form-control" name="first_name" placeholder="First Name">
+                        <input type="text" aria-label="Last name" class="form-control" name="last_name" placeholder="Last Name">
+                    </div>
+                    {% for message in get_flashed_messages(category_filter=["name"]) %}
+                    <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
+                    <div class="mb-3">
+                        <label for="email" class="form-label align-items-start">Email:</label>
+                        <input type="email" class="form-control" name="email">
+                    </div>
+                    {% for message in get_flashed_messages(category_filter=["email"]) %}
+                    <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
+                    <div class="mb-3">
+                        <label for="password" class="form-label align-items-start">Password:</label>
+                        <input type="password" class="form-control" name="password">
+                        <div id="passwordHelpBlock" class="form-text">
+                            Your password must be longer than 8 characters, contain one letter, one number, and one special character.
+                        </div>
+                    </div>
+                    {% for message in get_flashed_messages(category_filter=["pw_length"]) %}
+                        <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
+                    <div class="mb-3">
+                        <label for="pw_confirm" class="form-label align-items-start">Confirm Password:</label>
+                        <input type="password" class="form-control" name="pw_confirm">
+                    </div>
+                    {% for message in get_flashed_messages(category_filter=["pw_confirm"]) %}
+                    <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
+                    
+                    <button class="btn btn-primary">Register</button>
+                </form>
+            </div>
+            <!-- LOGIN -->
+            <div class="col right">
+                <h1>Login</h1>
+                {% for message in get_flashed_messages(category_filter=["email_not_found"]) %}
+                <p class="alert alert-danger">{{message}}</p>
+                {% endfor %}
+                {% for message in get_flashed_messages(category_filter=["pw"]) %}
+                <p class="alert alert-danger">{{message}}</p>
+                {% endfor %}
+                <form action="/login/validate" method="post">
+                    <div class="mb-3">
+                        <label for="email" class="form-label align-items-start">Email:</label>
+                        <input type="email" class="form-control" name="email" aria-describedby="name input">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label align-items-start">Password:</label>
+                        <input type="password" class="form-control" name="password" aria-describedby="name input">
+                    </div>
+                    <button class="btn btn-primary mb-3">Login</button>
+                </form>
+                {% for message in get_flashed_messages(category_filter=["bad_id"]) %}
+                <p class="alert alert-danger">{{message}}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+    crossorigin="anonymous"></script>
+</body>
+</html>

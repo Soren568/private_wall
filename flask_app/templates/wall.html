@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Wall</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/style.css') }}">
+
+</head>
+
+<body class="bg-light">
+    <nav class="navbar nav-width bg-dark text-light ">
+        <h1 class="me-auto">CodingDojo Wall</h1>
+        <h4 class="me-3 mt-1">Welcome {{active_user.first_name}}!</h4>
+        <a href="/logout" class="btn btn-outline-light">Log out</a>
+    </nav>
+    <div class="container cust-width">
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col p-5 bg-light">
+                <h5 class="mb-4">{{messages|length}} message(s) for you!</h5>
+                <!-- Different, less pretty way -->
+                {% for msg in messages %}
+                <div class="card ps-4 pt-2 pe-2 d-flex flex-row justify-content-between mb-3">
+                    <div class=>
+                        <blockquote class="blockquote">
+                            {{msg.content}}
+                        </blockquote>
+                        <figcaption class="blockquote-footer">
+                            {% for user in users %}
+                            {% if msg.sender_id == user.id %}
+                                {{user.first_name}}
+                            {% endif %}
+                            {% endfor %}
+                            , {{msg.time_since_sent()}}
+                        </figcaption>
+                    </div>
+                    <a href="/message/delete/{{msg.id}}" class="btn-close"></a>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Right Column -->
+            <div class="col p-5 bg-light">
+                {% for message in get_flashed_messages(category_filter=["msg_sent"]) %}
+                    <p class="alert alert-info align-center">{{message}}</p>
+                {% endfor %}
+                <h5>Would you like to send a message?</h5>
+                <p class="text-muted fs-6">You've sent 5 so far</p>
+                <form action="/message/send" method='POST'>
+                    <div class="d-flex flex-row align-items-center pb-2">
+                        <label for="recipient">Send a message to...</label>
+                        <select name="recipient_id" id="recipient" class="form-select form-select-sm w-auto ms-3">
+                            {% for user in users %}
+                            {% if user.id != active_user.id %}
+                            <option value="{{user.id}}"> {{user.first_name}} </option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <textarea name="content" id="content" cols="30" rows="4" class="form-control mb-3"
+                        placeholder="Type your message here..."></textarea>
+                    {% for message in get_flashed_messages(category_filter=["blank_msg"]) %}
+                        <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
+                    <input type="hidden" name="sender_id" value="{{active_user.id}}">
+                    <button class="btn btn-primary">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
